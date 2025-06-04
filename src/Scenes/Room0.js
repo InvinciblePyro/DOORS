@@ -7,10 +7,9 @@ class Room0 extends Phaser.Scene {
     // Add the background image
     let Room0bg = this.add.image(0, 0, "Room0bg").setOrigin(0, 0);
     Room0bg.setScale(0.3)
-    
-    
-    
-    
+
+    this.input.setDefaultCursor('none');
+
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
     this.flashlightEnabled = false;
