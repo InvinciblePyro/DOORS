@@ -5,7 +5,7 @@ class Load extends Phaser.Scene {
 
   preload() {
     this.load.setPath("./Assets/");
-    this.load.image("Room0bg", "Visual/Room0bg.jpg");
+    this.load.image("Room0bg", "Visual/RoomsBg/Initial-Photos/Room0bg.jpg");
   }
 
   create() {

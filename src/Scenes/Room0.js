@@ -5,9 +5,13 @@ class Room0 extends Phaser.Scene {
 
   create() {
     // Add the background image
-    this.add.image(0, 0, "Room0bg").setOrigin(0, 0);
-
-        // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
+    let Room0bg = this.add.image(0, 0, "Room0bg").setOrigin(0, 0);
+    Room0bg.setScale(0.3)
+    
+    
+    
+    
+    // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
     this.flashlightEnabled = false;
     this.input.keyboard.on('keydown-ONE', () => {
@@ -15,7 +19,7 @@ class Room0 extends Phaser.Scene {
     });
     // Create the dark overlay that covers the screen
     this.darkOverlay = this.add.graphics();
-    this.darkOverlay.fillStyle(0x000000, 0.9); // nearly full black
+    this.darkOverlay.fillStyle(0x000000, 0.95); // nearly full black
     this.darkOverlay.fillRect(0, 0, this.scale.width, this.scale.height);
     // Create the spotlight graphics (not shown directly)
     this.spotlight = this.make.graphics({ x: 0, y: 0, add: false });
@@ -27,7 +31,7 @@ class Room0 extends Phaser.Scene {
         // L I G H T E R   H E  L L ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
 
     //door functionality 
-    let door = this.add.rectangle(0, 140, 130, 330)
+    let door = this.add.rectangle(260, 462, 135, 160)
       .setOrigin(0, 0)
       .setInteractive({ useHandCursor: false })
       .on('pointerdown', () => {
@@ -36,7 +40,7 @@ class Room0 extends Phaser.Scene {
           //this.scene.start("room1");
         }
       })
-      //.setStrokeStyle(2, 0x00ff00) 
+      .setStrokeStyle(2, 0x00ff00) 
 
     //Debug: gives pointer coords when you click
     this.input.on('pointerdown', (pointer) => {
