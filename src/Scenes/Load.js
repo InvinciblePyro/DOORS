@@ -5,11 +5,15 @@ class Load extends Phaser.Scene {
 
   preload() {
     this.load.setPath("./Assets/");
-    this.load.image("Room0bg", "Visual/RoomsBg/Initial-Photos/Room0bg.jpg");
+
+    for (let i=0; i<=10; i++){
+      this.load.image("Room" + i + "bg", "Visual/RoomsBg/Room"+i+"bg.jpeg");
+    }
+
+
   }
 
   create() {
-    
     // Move to the next scene
     this.scene.start("room0");
   }
