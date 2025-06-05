@@ -6,10 +6,10 @@ class Room4 extends Phaser.Scene {
   create() {
     // Add the background image
     let Room0bg = this.add.image(0, 0, "Room4bg").setOrigin(0, 0);
-    Room0bg.setScale(0.3)
+    Room0bg.setScale(0.23)
 
     //hide cursor icon
-    this.input.setDefaultCursor('none');
+    //this.input.setDefaultCursor('none');
 
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
@@ -30,18 +30,60 @@ class Room4 extends Phaser.Scene {
     this.darkOverlay.setMask(mask);
         // L I G H T E R   H E  L L ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
 
-    //door functionality 
-    let door = this.add.rectangle(260, 462, 135, 160)
+    //door functionality v v v v v v v v v v v v v v v v v 
+    let debugDoorOutline = 0;
+    //array of doors
+    this.doors = [];
+
+    //door0
+    const door0 = this.add.rectangle(0, 173, 230, 450)
       .setOrigin(0, 0)
-      .setInteractive({ useHandCursor: false })
+      .setInteractive()
       .on('pointerdown', () => {
-        if(this.flashlightEnabled){
+        if (this.flashlightEnabled) {
           console.log("Button Clicked");
           this.scene.start("room5");
         }
       })
-      //.setStrokeStyle(2, 0x00ff00) 
+      .setStrokeStyle(debugDoorOutline, 0x00ff00)
 
+    //Debug: gives pointer coords when you click
+    this.input.on('pointerdown', (pointer) => {
+      console.log(`x: ${pointer.x}, y: ${pointer.y}`);
+    });
+
+    //door1
+    const door1 = this.add.rectangle(465, 270, 30, 170)
+      .setOrigin(0, 0)
+      .setInteractive()
+      .on('pointerdown', () => {
+        if (this.flashlightEnabled) {
+          console.log("Button Clicked");
+          this.scene.start("room5");
+        }
+      })
+      .setStrokeStyle(debugDoorOutline, 0x00ff00)
+
+    //Debug: gives pointer coords when you click
+    this.input.on('pointerdown', (pointer) => {
+      console.log(`x: ${pointer.x}, y: ${pointer.y}`);
+    });
+
+    //door2
+    const door2 = this.add.rectangle(540, 285, 20, 120)
+      .setOrigin(0, 0)
+      .setInteractive()
+      .on('pointerdown', () => {
+        if (this.flashlightEnabled) {
+          console.log("Button Clicked");
+          this.scene.start("room5");
+        }
+      })
+      .setStrokeStyle(debugDoorOutline, 0x00ff00)
+
+    //push doors to array
+    this.doors.push(door0, door1, door2);
+    //door functionality ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ 
     //Debug: gives pointer coords when you click
     this.input.on('pointerdown', (pointer) => {
       console.log(`x: ${pointer.x}, y: ${pointer.y}`);
@@ -64,5 +106,16 @@ class Room4 extends Phaser.Scene {
       this.spotlight.fillStyle(0xffffff, 1);
       this.spotlight.fillCircle(pointer.x, pointer.y, radius);
     }
+
+    // Cursor changes to pointer icon when hovering over a door
+    let cursorIsOverDoor = false;
+    for (const door of this.doors) {
+      if (door.input && door.input.enabled && door.getBounds().contains(pointer.x, pointer.y)) {
+        cursorIsOverDoor = true;
+        break;
+      }
+    }
+    this.input.setDefaultCursor(cursorIsOverDoor && this.flashlightEnabled ? 'pointer' : 'none');
+
   }
 }

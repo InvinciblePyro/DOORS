@@ -15,6 +15,6 @@ class Load extends Phaser.Scene {
 
   create() {
     // Move to the next scene
-    this.scene.start("room0");
+    this.scene.start("room5");
   }
 }
