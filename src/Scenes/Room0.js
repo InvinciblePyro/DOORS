@@ -4,6 +4,30 @@ class Room0 extends Phaser.Scene {
   }
 
   create() {
+    // === Fade-Out Overlay (used when leaving) ===
+    this.fadeOutOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+      .setOrigin(0, 0)
+      .setAlpha(0)
+      .setDepth(1000); // Make sure it's on top of everything
+
+    // === Fade-In Overlay (used when entering) ===
+    this.fadeInOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+      .setOrigin(0, 0)
+      .setAlpha(1)
+      .setDepth(1000);
+
+    this.tweens.add({
+      targets: this.fadeInOverlay,
+      alpha: 0,
+      duration: 1000,
+      onComplete: () => {
+        this.fadeInOverlay.destroy();
+      }
+    });
+
+    //SFX creation
+    this.SFX_DoorOpen = this.sound.add("SFX-DoorOpen");
+
     // Add the background image
     let Room0bg = this.add.image(0, 0, "Room0bg").setOrigin(0, 0);
     Room0bg.setScale(0.2)
@@ -11,9 +35,18 @@ class Room0 extends Phaser.Scene {
     //hide cursor icon
     this.input.setDefaultCursor('none');
 
+    //SFX Ambience
+    let globalMusic = this.sound.add("OST", {
+      loop: true,
+      volume: 1,
+      rate: 1,
+    });
+    globalMusic.play();
+
+
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
-    this.flashlightEnabled = false;
+    this.flashlightEnabled = true;
     this.input.keyboard.on('keydown-ONE', () => {
       this.flashlightEnabled = !this.flashlightEnabled;
     });
@@ -43,10 +76,19 @@ class Room0 extends Phaser.Scene {
     const door0 = this.add.rectangle(175, 310, 90, 120)
       .setOrigin(0, 0)
       .setInteractive()
-      .on('pointerdown', () => {
-        if(this.flashlightEnabled){
+            .on('pointerdown', () => {
+        if (this.flashlightEnabled) {
           console.log("Button Clicked");
-          this.scene.start("room1");
+          this.SFX_DoorOpen.play();
+
+          this.tweens.add({
+            targets: this.fadeOutOverlay,
+            alpha: 1,
+            duration: 1000, // fade over 1 second
+            onComplete: () => {
+              this.scene.start("room1");
+            }
+          });
         }
       })
       .setStrokeStyle(debugDoorOutline, 0x00ff00) 
@@ -63,6 +105,7 @@ class Room0 extends Phaser.Scene {
       .on('pointerdown', () => {
         if (this.flashlightEnabled) {
           console.log("Button Clicked");
+          this.SFX_DoorOpen.play();
           this.scene.start("room1");
         }
       })
@@ -80,6 +123,7 @@ class Room0 extends Phaser.Scene {
       .on('pointerdown', () => {
         if (this.flashlightEnabled) {
           console.log("Button Clicked");
+          this.SFX_DoorOpen.play();
           this.scene.start("room1");
         }
       })
@@ -93,6 +137,7 @@ class Room0 extends Phaser.Scene {
     this.input.on('pointerdown', (pointer) => {
       console.log(`x: ${pointer.x}, y: ${pointer.y}`);
     });
+
   }
 
   update() {

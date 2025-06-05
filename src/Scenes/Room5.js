@@ -4,6 +4,30 @@ class Room5 extends Phaser.Scene {
   }
 
   create() {
+    // === Fade-Out Overlay (used when leaving) ===
+    this.fadeOutOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+      .setOrigin(0, 0)
+      .setAlpha(0)
+      .setDepth(1000); // Make sure it's on top of everything
+
+    // === Fade-In Overlay (used when entering) ===
+    this.fadeInOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+      .setOrigin(0, 0)
+      .setAlpha(1)
+      .setDepth(1000);
+
+    this.tweens.add({
+      targets: this.fadeInOverlay,
+      alpha: 0,
+      duration: 1000,
+      onComplete: () => {
+        this.fadeInOverlay.destroy();
+      }
+    });
+
+    //SFX creation
+    this.SFX_DoorOpen = this.sound.add("SFX-DoorOpen");
+
     // Add the background image
     let Room0bg = this.add.image(0, 0, "Room5bg").setOrigin(0, 0);
     Room0bg.setScale(0.44)
@@ -13,7 +37,7 @@ class Room5 extends Phaser.Scene {
 
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
-    this.flashlightEnabled = false;
+    this.flashlightEnabled = true;
     this.input.keyboard.on('keydown-ONE', () => {
       this.flashlightEnabled = !this.flashlightEnabled;
     });
@@ -35,11 +59,20 @@ class Room5 extends Phaser.Scene {
       .setOrigin(0, 0)
       .setInteractive({ useHandCursor: false })
       .on('pointerdown', () => {
-        if(this.flashlightEnabled){
+        if (this.flashlightEnabled) {
           console.log("Button Clicked");
-          this.scene.start("room6");
+          this.SFX_DoorOpen.play();
+  
+          this.tweens.add({
+            targets: this.fadeOutOverlay,
+            alpha: 1,
+            duration: 1000, // 1 second fade out
+            onComplete: () => {
+              this.scene.start("room6");
+            }
+          });
         }
-      })
+      }) 
       .setStrokeStyle(0, 0x00ff00) 
 
     //Debug: gives pointer coords when you click

@@ -4,6 +4,16 @@ class Room1 extends Phaser.Scene {
   }
 
   create() {
+    // Fade overlay (starts invisible)
+    this.fadeOutOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+    .setOrigin(0, 0)
+    .setAlpha(0)
+    .setDepth(1000); // Make sure it's above everything
+
+
+    //SFX creation
+    this.SFX_DoorOpen = this.sound.add("SFX-DoorOpen");
+
     // Add the background image
     let Room0bg = this.add.image(0, 0, "Room1bg").setOrigin(0, 0);
     Room0bg.setScale(0.4)
@@ -13,7 +23,7 @@ class Room1 extends Phaser.Scene {
 
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
-    this.flashlightEnabled = false;
+    this.flashlightEnabled = true;
     this.input.keyboard.on('keydown-ONE', () => {
       this.flashlightEnabled = !this.flashlightEnabled;
     });
@@ -35,17 +45,42 @@ class Room1 extends Phaser.Scene {
       .setOrigin(0, 0)
       .setInteractive({ useHandCursor: false })
       .on('pointerdown', () => {
-        if(this.flashlightEnabled){
+        if (this.flashlightEnabled) {
           console.log("Button Clicked");
-          this.scene.start("room2");
+          this.SFX_DoorOpen.play();
+  
+          this.tweens.add({
+            targets: this.fadeOutOverlay,
+            alpha: 1,
+            duration: 1000, // 1 second fade out
+            onComplete: () => {
+              this.scene.start("room2");
+            }
+          });
         }
-      })
+      })  
       .setStrokeStyle(0, 0x00ff00) 
 
     //Debug: gives pointer coords when you click
     this.input.on('pointerdown', (pointer) => {
       console.log(`x: ${pointer.x}, y: ${pointer.y}`);
     });
+
+    // Fade-in overlay (starts fully black)
+    this.fadeInOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
+      .setOrigin(0, 0)
+      .setAlpha(1)
+      .setDepth(1000); // on top of everything
+
+    this.tweens.add({
+      targets: this.fadeInOverlay,
+      alpha: 0,
+      duration: 1000, // 1 second fade-in
+      onComplete: () => {
+        this.fadeInOverlay.destroy(); // optional: clean it up
+      }
+    });
+
 
   }
 
