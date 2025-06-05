@@ -6,7 +6,7 @@ class Load extends Phaser.Scene {
   preload() {
     this.load.setPath("./Assets/");
 
-    for (let i=0; i<=10; i++){
+    for (let i=0; i<=9; i++){
       this.load.image("Room" + i + "bg", "Visual/RoomsBg/Room"+i+"bg.jpeg");
     }
 
