@@ -32,14 +32,31 @@ class Room9 extends Phaser.Scene {
     let Room0bg = this.add.image(0, 0, "Room9bg").setOrigin(0, 0);
     Room0bg.setScale(0.8)
 
+    //lighter image
+    this.lighterCursor = this.add.image(0, 0, 'lighter')
+      .setScale(1)
+      .setVisible(false)
+      .setDepth(999); // Make sure it's above other elements
+
+
     //hide cursor icon
     this.input.setDefaultCursor('none');
 
     // L I G H T E R   H E  L L v v v v v v v v v v v v v v v v v  
     //lighter key
-    this.flashlightEnabled = true;
+    this.flashlightEnabled = false;
+    this.spotlightFadeAlpha = 1;
+
     this.input.keyboard.on('keydown-ONE', () => {
       this.flashlightEnabled = !this.flashlightEnabled;
+      this.lighterCursor.setVisible(this.flashlightEnabled);
+
+      this.tweens.add({
+        targets: this,
+        spotlightFadeAlpha: this.flashlightEnabled ? 0 : 1,
+        duration: 400, // duration of fade (ms)
+        ease: 'Sine.easeInOut'
+      });
     });
     // Create the dark overlay that covers the screen
     this.darkOverlay = this.add.graphics();
@@ -52,7 +69,9 @@ class Room9 extends Phaser.Scene {
     mask.invertAlpha = true; // White area = hole (i.e. flashlight)
     // Apply the mask to the dark overlay
     this.darkOverlay.setMask(mask);
-        // L I G H T E R   H E  L L ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+    // L I G H T E R   H E  L L ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+
+    this.spotlightFade = this.add.graphics().setDepth(998);
 
     //door functionality 
     this.door = this.add.rectangle(380, 162, 195, 350)
@@ -85,23 +104,30 @@ class Room9 extends Phaser.Scene {
   update() {
     const pointer = this.input.activePointer;
 
-    // Flickering effect radius
-    let baseRadius = 100;
-    let flicker = Math.sin(this.time.now * 0.002) * 5; // subtle flicker
-    let radius = baseRadius + flicker;
+    // Spotlight flicker effect
+    const flicker = Math.sin(this.time.now * 0.002) * 5;
+    const radius = 100 + flicker;
 
-    // Redraw spotlight
+    // Clear previous spotlight
     this.spotlight.clear();
+    this.spotlightFade.clear();
 
-    if (this.flashlightEnabled) {
+    if (this.flashlightEnabled || this.spotlightFadeAlpha > 0) {
+      // White circle cutout
       this.spotlight.fillStyle(0xffffff, 1);
       this.spotlight.fillCircle(pointer.x, pointer.y, radius);
+
+      // Black overlay fade
+      if (this.spotlightFadeAlpha > 0) {
+        this.spotlightFade.fillStyle(0x000000, this.spotlightFadeAlpha);
+        this.spotlightFade.fillCircle(pointer.x, pointer.y, radius);
+      }
     }
 
-    // Cursor icon logic
-    if (this.door && this.door.input && this.door.input.enabled) {
-      const isOver = this.door.getBounds().contains(pointer.x, pointer.y);
-      this.input.setDefaultCursor(isOver && this.flashlightEnabled ? 'pointer' : 'none');
+    // Update lighter position
+    if (this.flashlightEnabled && this.lighterCursor.visible) {
+      this.lighterCursor.setPosition(pointer.x - 25, pointer.y + 50);
     }
+
   }
 }
