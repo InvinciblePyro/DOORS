@@ -20,7 +20,7 @@ class Room1 extends Phaser.Scene {
 
     //lighter image
     this.lighterCursor = this.add.image(0, 0, 'lighter')
-      .setScale(1)
+      .setScale(0.15)
       .setVisible(false)
       .setDepth(999); // Make sure it's above other elements
 
@@ -129,7 +129,7 @@ class Room1 extends Phaser.Scene {
 
     // Update lighter position
     if (this.flashlightEnabled && this.lighterCursor.visible) {
-      this.lighterCursor.setPosition(pointer.x - 25, pointer.y + 50);
+      this.lighterCursor.setPosition(pointer.x-6, pointer.y + 25);
     }
 
   }
