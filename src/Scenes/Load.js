@@ -12,7 +12,7 @@ class Load extends Phaser.Scene {
     }
 
     //lighter png
-    this.load.image("lighter", "Visual/download.png");
+    this.load.image("lighter", "Visual/lighter.png");
 
     //load ambience
     this.load.audio("OST", "Auditory/NoiseAmbience.wav");
