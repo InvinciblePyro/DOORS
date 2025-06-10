@@ -14,6 +14,9 @@ class Load extends Phaser.Scene {
     //lighter png
     this.load.image("lighter", "Visual/lighter.png");
 
+    //lighter fluid png
+    this.load.image("lighterFluid", "Visual/lighterFluid.png");
+
     //load ambience
     this.load.audio("OST", "Auditory/NoiseAmbience.wav");
 
