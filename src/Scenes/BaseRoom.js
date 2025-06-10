@@ -3,9 +3,9 @@ class BaseRoom extends Phaser.Scene {
     super(key);
   }
 
-  createBaseRoom(bgKey, doorConfigs = []) {
+  createBaseRoom(bgKey, scale, doorConfigs = []) {
     // === Background ===
-    this.add.image(0, 0, bgKey).setOrigin(0, 0).setScale(0.2);
+    this.add.image(0, 0, bgKey).setOrigin(0, 0).setScale(scale);
 
     // === Fade overlays ===
     this.fadeOutOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
@@ -77,7 +77,7 @@ class BaseRoom extends Phaser.Scene {
       const door = this.add.rectangle(x, y, w, h)
         .setOrigin(0, 0)
         .setInteractive()
-        .setStrokeStyle(1, 0x00ff00) 
+        .setStrokeStyle(2, 0x00ff00) 
         .on("pointerdown", () => {
           if (this.flashlightEnabled) {
             this.SFX_DoorOpen.play();
