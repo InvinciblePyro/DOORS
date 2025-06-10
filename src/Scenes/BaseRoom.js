@@ -49,6 +49,27 @@ class BaseRoom extends Phaser.Scene {
       .setDepth(999);
     this.spotlightFade = this.add.graphics().setDepth(998);
     
+    // === Doors ===
+    this.doors = [];
+    for (const { x, y, w, h, target } of doorConfigs) {
+      const door = this.add.rectangle(x, y, w, h)
+        .setOrigin(0, 0)
+        .setInteractive()
+        .setStrokeStyle(0, 0x00ff00) 
+        .on("pointerdown", () => {
+          if (this.flashlightEnabled) {
+            this.SFX_DoorOpen.play();
+            this.tweens.add({
+              targets: this.fadeOutOverlay,
+              alpha: 1,
+              duration: 1000,
+              onComplete: () => this.scene.start(target, { lighterFuel: this.lighterFuel})
+            });
+          }
+        });
+      this.doors.push(door);
+    }
+
     // === Lighter Fluid Pickup ===
     this.lighterFluidGroup = this.add.group();
     // chance to spawn lighter fluid
@@ -61,14 +82,13 @@ class BaseRoom extends Phaser.Scene {
         .setInteractive();
 
       fluid.on("pointerdown", () => {
-        if(this.flashlightEnabled){
+        if (this.flashlightEnabled) {
           this.collectLighterFluid(fluid);
         }
       });
 
       this.lighterFluidGroup.add(fluid);
     }
-
 
     // Create the darkness overlay
     this.darkOverlay = this.add.graphics();
@@ -96,28 +116,6 @@ class BaseRoom extends Phaser.Scene {
         });
       }
     });
-    
-  
-    // === Doors ===
-    this.doors = [];
-    for (const { x, y, w, h, target } of doorConfigs) {
-      const door = this.add.rectangle(x, y, w, h)
-        .setOrigin(0, 0)
-        .setInteractive()
-        .setStrokeStyle(0, 0x00ff00) 
-        .on("pointerdown", () => {
-          if (this.flashlightEnabled) {
-            this.SFX_DoorOpen.play();
-            this.tweens.add({
-              targets: this.fadeOutOverlay,
-              alpha: 1,
-              duration: 1000,
-              onComplete: () => this.scene.start(target, { lighterFuel: this.lighterFuel})
-            });
-          }
-        });
-      this.doors.push(door);
-    }
 
     // Pointer debug
     this.input.on("pointerdown", pointer => {
