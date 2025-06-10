@@ -18,7 +18,13 @@ class Load extends Phaser.Scene {
     this.load.audio("OST", "Auditory/NoiseAmbience.wav");
 
     //SFX
+
+    //door sfx
     this.load.audio("SFX-DoorOpen", "Auditory/DoorOpen.wav");
+    //lighter sfx
+    this.load.audio("SFX-Lighter", "Auditory/Lighter.wav");
+    
+
 
   }
 
