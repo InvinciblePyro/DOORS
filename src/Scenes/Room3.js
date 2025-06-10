@@ -4,7 +4,7 @@ class Room3 extends BaseRoom {
   }
 
   create() {
-    this.createBaseRoom("Room3bg", 0.45, [
+    this.createBaseRoom("Room3bg", 0.45, this.lighterFuel, [
       { x: 313, y: 240, w: 85, h: 190, target: "room4" },
     ]);
   }

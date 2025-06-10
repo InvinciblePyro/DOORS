@@ -3,9 +3,13 @@ class BaseRoom extends Phaser.Scene {
     super(key);
   }
 
-  createBaseRoom(bgKey, scale, doorConfigs = []) {
+  init(data){
+    this.lighterFuel = data?.lighterFuel ?? 100;
+  }
+
+  createBaseRoom(bgKey, scale, lighterFuel, doorConfigs = []) {
     // === Background ===
-    this.add.image(0, 0, bgKey).setOrigin(0, 0).setScale(scale);
+    const bg = this.add.image(0, 0, bgKey).setOrigin(0, 0).setScale(scale);
 
     // === Fade overlays ===
     this.fadeOutOverlay = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000)
@@ -31,10 +35,10 @@ class BaseRoom extends Phaser.Scene {
       this.OST.play();
     }
     this.SFX_DoorOpen = this.sound.add("SFX-DoorOpen");
-    this.SFX_Lighter = this.sound.add("SFX-Lighter", { volume: 0.15 });
+    this.SFX_Lighter = this.sound.add("SFX-Lighter", { volume: 0.2 });
+    this.SFX_lighterFluid_Pickup = this.sound.add("SFX-lighterFluid-Pickup", { volume: 1.5 });
 
     // === Flashlight ===
-    this.lighterFuel = 100;
     this.flashlightEnabled = false;
     this.spotlightFadeAlpha = 1;
     this.input.setDefaultCursor("none");
@@ -47,17 +51,19 @@ class BaseRoom extends Phaser.Scene {
     
     // === Lighter Fluid Pickup ===
     this.lighterFluidGroup = this.add.group();
-    // 10% chance to spawn lighter fluid
-    if (Phaser.Math.Between(1, 100) <= 90) {
-      const x = Phaser.Math.Between(100, this.scale.width - 100);
-      const y = Phaser.Math.Between(100, this.scale.height - 100);
+    // chance to spawn lighter fluid
+    if (Phaser.Math.Between(1, 100) <= 100) {
+      const x = Phaser.Math.Between(50, bg.displayWidth - 50);
+      const y = Phaser.Math.Between(50, bg.displayHeight - 50);
 
       const fluid = this.add.image(x, y, "lighterFluid")
-        .setScale(0.2)
+        .setScale(0.1)
         .setInteractive();
 
       fluid.on("pointerdown", () => {
-        this.collectLighterFluid(fluid);
+        if(this.flashlightEnabled){
+          this.collectLighterFluid(fluid);
+        }
       });
 
       this.lighterFluidGroup.add(fluid);
@@ -106,7 +112,7 @@ class BaseRoom extends Phaser.Scene {
               targets: this.fadeOutOverlay,
               alpha: 1,
               duration: 1000,
-              onComplete: () => this.scene.start(target)
+              onComplete: () => this.scene.start(target, { lighterFuel: this.lighterFuel})
             });
           }
         });
@@ -122,11 +128,12 @@ class BaseRoom extends Phaser.Scene {
   collectLighterFluid(fluid) {
     fluid.destroy();
     console.log("Lighter fluid collected!");
+    this.SFX_lighterFluid_Pickup.play();
 
     // Example logic: increase lighterFuel (if you have it)
     if (this.lighterFuel !== undefined) {
-      this.lighterFuel = Math.min(this.lighterFuel + 20, 100); // cap at 100
-      console.log("Lighter fuel: " + this.lighterFuel);
+      this.lighterFuel = 100; // refresh lighter fuel
+      console.log("Lighter fuel: " + Math.round(this.lighterFuel));
     }
   }
   
@@ -155,7 +162,7 @@ class BaseRoom extends Phaser.Scene {
 
     //drain lighter fuel
     if (this.flashlightEnabled) {
-      this.lighterFuel -= 0.05; // Adjust as needed
+      this.lighterFuel -= 0.025; // Adjust as needed
       console.log(Math.round(this.lighterFuel));
       if (this.lighterFuel <= 0) {
         this.lighterFuel = 0;
