@@ -47,7 +47,7 @@ class BaseRoom extends Phaser.Scene {
 
     // Create the darkness overlay
     this.darkOverlay = this.add.graphics();
-    this.darkOverlay.fillStyle(0x000000, 0.1);
+    this.darkOverlay.fillStyle(0x000000, 1);
     this.darkOverlay.fillRect(0, 0, this.scale.width, this.scale.height);
 
     // Create spotlight + mask
@@ -77,7 +77,7 @@ class BaseRoom extends Phaser.Scene {
       const door = this.add.rectangle(x, y, w, h)
         .setOrigin(0, 0)
         .setInteractive()
-        .setStrokeStyle(2, 0x00ff00) 
+        .setStrokeStyle(0, 0x00ff00) 
         .on("pointerdown", () => {
           if (this.flashlightEnabled) {
             this.SFX_DoorOpen.play();
