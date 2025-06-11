@@ -73,7 +73,7 @@ class BaseRoom extends Phaser.Scene {
     // === Lighter Fluid Pickup ===
     this.lighterFluidGroup = this.add.group();
     // chance to spawn lighter fluid
-    if (Phaser.Math.Between(1, 100) <= 100) {
+    if (Phaser.Math.Between(1, 100) <= 50) {
       const x = Phaser.Math.Between(50, bg.displayWidth - 50);
       const y = Phaser.Math.Between(50, bg.displayHeight - 50);
 
@@ -167,10 +167,12 @@ class BaseRoom extends Phaser.Scene {
         this.flashlightEnabled = false;
         this.lighterCursor.setVisible(false);
       }
-      if (this.lighterFuel <= 0) { 
-        this.OST.stop();
-        this.scene.start("death"); 
-      }
+    }
+
+    //die if lighter fuell runs out
+    if (this.lighterFuel <= 0) {
+      this.OST.stop();
+      this.scene.start("death");
     }
     
     // Move lighter image

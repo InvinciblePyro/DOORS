@@ -25,9 +25,11 @@ class DEATH extends Phaser.Scene {
 
     //this.add.image(330, 300, "bg").setScale(0.55); // background
 
-    this.add.text(10, 70, "LMAO U DIED", { fontSize: '64px', fill: '#ffffff' });
-    this.add.text(10, 160, "LLLLLLLLLL", { fontSize: '32px', fill: '#ffffff' });
-    this.add.text(10, 290, "Press space to try again bozo.", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 70, "You have faded ", { fontSize: '64px', fill: '#ffffff' });
+    this.add.text(10, 120, "into the darkness", { fontSize: '64px', fill: '#ffffff' });
+    this.add.text(10, 260, "keep your lighter fueled", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 295, "by looking for fuel cartridges.", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 390, "Press space to try again.", { fontSize: '32px', fill: '#ffffff' });
 
     this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
