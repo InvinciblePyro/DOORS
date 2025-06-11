@@ -160,12 +160,16 @@ class BaseRoom extends Phaser.Scene {
 
     //drain lighter fuel
     if (this.flashlightEnabled) {
-      this.lighterFuel -= 0.025; // Adjust as needed
+      this.lighterFuel -= 0.25; // Adjust as needed
       console.log(Math.round(this.lighterFuel));
       if (this.lighterFuel <= 0) {
         this.lighterFuel = 0;
         this.flashlightEnabled = false;
         this.lighterCursor.setVisible(false);
+      }
+      if (this.lighterFuel <= 0) { 
+        this.OST.stop();
+        this.scene.start("death"); 
       }
     }
     
