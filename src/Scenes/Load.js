@@ -23,6 +23,8 @@ class Load extends Phaser.Scene {
     // === SFX == 
     //door sfx
     this.load.audio("SFX-DoorOpen", "Auditory/DoorOpen.wav");
+    //door banging sfx
+    this.load.audio("SFX-DoorBang", "Auditory/BangingDoor.wav");
     //lighter sfx
     this.load.audio("SFX-Lighter", "Auditory/Lighter.wav");
     //lighterFluid sfx

@@ -30,13 +30,13 @@ class BaseRoom extends Phaser.Scene {
     });
 
     // === Audio ===
-    if (!this.OST) {
-      this.OST = this.sound.add("OST", { loop: true, volume: 1 });
-      this.OST.play();
-    }
+    this.OST = this.sound.add("OST", { loop: true, volume: 1 });
+    this.OST.play();
+
     this.SFX_DoorOpen = this.sound.add("SFX-DoorOpen");
+    this.SFX_DoorBang = this.sound.add("SFX-DoorBang", { volume: 1});
     this.SFX_Lighter = this.sound.add("SFX-Lighter", { volume: 0.2 });
-    this.SFX_lighterFluid_Pickup = this.sound.add("SFX-lighterFluid-Pickup", { volume: 1.5 });
+    this.SFX_lighterFluid_Pickup = this.sound.add("SFX-lighterFluid-Pickup", { volume: 2 });
 
     // === Flashlight ===
     this.flashlightEnabled = false;
@@ -51,6 +51,7 @@ class BaseRoom extends Phaser.Scene {
     
     // === Doors ===
     this.doors = [];
+    this.clickedDoor = false;
     for (const { x, y, w, h, target } of doorConfigs) {
       const door = this.add.rectangle(x, y, w, h)
         .setOrigin(0, 0)
@@ -58,16 +59,64 @@ class BaseRoom extends Phaser.Scene {
         .setStrokeStyle(0, 0x00ff00) 
         .on("pointerdown", () => {
           if (this.flashlightEnabled) {
+            this.clickedDoor = true;
             this.SFX_DoorOpen.play();
+            this.SFX_DoorBang.stop();
             this.tweens.add({
               targets: this.fadeOutOverlay,
               alpha: 1,
               duration: 1000,
-              onComplete: () => this.scene.start(target, { lighterFuel: this.lighterFuel})
+              onComplete: () => {
+                this.scene.start(target, { lighterFuel: this.lighterFuel});
+                this.OST.stop();
+              }
             });
           }
         });
       this.doors.push(door);
+    }
+    // === door chance === 
+    if (Phaser.Math.Between(1, 100) <= 10) {
+      for (const door of this.doors) {
+        door.disableInteractive();
+      }
+      this.timeLeft = 5; // timer in seconds
+
+      const randInd = Phaser.Math.Between(0, this.doors.length - 1);
+      const targetDoor = this.doors[randInd];
+      targetDoor.setInteractive();
+      let flickerOn = true;
+
+      this.SFX_DoorBang.play();
+
+      // Flicker the stroke color every 250ms
+      this.flickerEvent = this.time.addEvent({
+        delay: 250,
+        callback: () => {
+          if (flickerOn) {
+            targetDoor.setStrokeStyle(2, 0xff420606);  // Bright red
+          } else {targetDoor.setStrokeStyle(0, 0x000000);}
+          flickerOn = !flickerOn;
+        },
+        loop: true
+      });
+
+      // Countdown and check for death
+      this.time.addEvent({
+        delay: 1000,
+        callback: () => {
+          if (!this.clickedDoor) this.timeLeft--;
+          console.log("Time Left " + this.timeLeft);
+
+          if (this.timeLeft <= 0) {
+            this.SFX_DoorBang.stop();
+            this.flickerEvent.remove();  // stop flicker
+            this.scene.start("death");
+          }
+        },
+        callbackScope: this,
+        loop: true
+      });
     }
 
     // === Lighter Fluid Pickup ===
@@ -160,7 +209,7 @@ class BaseRoom extends Phaser.Scene {
 
     //drain lighter fuel
     if (this.flashlightEnabled) {
-      this.lighterFuel -= 0.25; // Adjust as needed
+      this.lighterFuel -= 0.025; 
       console.log(Math.round(this.lighterFuel));
       if (this.lighterFuel <= 0) {
         this.lighterFuel = 0;
