@@ -28,7 +28,7 @@ class Load extends Phaser.Scene {
     //lighter sfx
     this.load.audio("SFX-Lighter", "Auditory/Lighter.wav");
     //lighterFluid sfx
-    this.load.audio("SFX-lighterFluid-Pickup", "Auditory/lighterFluid-Pickup.wav");
+    this.load.audio("SFX-lighterFluid-Pickup", "Auditory/LighterFluid-Pickup.wav");
     
 
 
