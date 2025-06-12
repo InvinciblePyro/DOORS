@@ -77,7 +77,7 @@ class BaseRoom extends Phaser.Scene {
       this.doors.push(door);
     }
     // === door chance === 
-    if (Phaser.Math.Between(1, 100) <= 100) {
+    if (Phaser.Math.Between(1, 100) <= 10) {
       for (const door of this.doors) {
         door.disableInteractive();
       }
