@@ -38,15 +38,6 @@ class BaseRoom extends Phaser.Scene {
     this.SFX_Lighter = this.sound.add("SFX-Lighter", { volume: 0.2 });
     this.SFX_lighterFluid_Pickup = this.sound.add("SFX-lighterFluid-Pickup", { volume: 2 });
 
-    // === Audio Context Unlock (required for autoplay on some browsers) ===
-    this.input.once("pointerdown", () => {
-      if (this.sound.context.state === "suspended") {
-        this.sound.context.resume().then(() => {
-          console.log("Audio context resumed by user interaction.");
-        });
-      }
-    });
-
 
     // === Flashlight ===
     this.flashlightEnabled = false;
@@ -220,7 +211,7 @@ class BaseRoom extends Phaser.Scene {
     //drain lighter fuel
     if (this.flashlightEnabled) {
       this.lighterFuel -= 0.025; 
-      console.log(Math.round(this.lighterFuel));
+      //console.log(Math.round(this.lighterFuel));
       if (this.lighterFuel <= 0) {
         this.lighterFuel = 0;
         this.flashlightEnabled = false;
