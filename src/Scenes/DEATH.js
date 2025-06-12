@@ -51,7 +51,7 @@ class DEATH extends Phaser.Scene {
         alpha: 1,
         duration: 1000,
         onComplete: () => {
-          this.scene.start("loadScene");
+          this.scene.start("titleScreen");
         }
       });
     }
