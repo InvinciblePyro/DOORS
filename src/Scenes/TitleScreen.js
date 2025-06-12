@@ -42,17 +42,30 @@ class TitleScreen extends Phaser.Scene {
   }
 
   update() {
-    if (!this.started && Phaser.Input.Keyboard.JustDown(this.startKey)) {
-      this.started = true;
+  if (!this.started && Phaser.Input.Keyboard.JustDown(this.startKey)) {
+    this.started = true;
 
-      this.tweens.add({
-        targets: this.fadeOverlay,
-        alpha: 1,
-        duration: 1000,
-        onComplete: () => {
-          this.scene.start("loadScene");
-        }
+    // Unlock audio context here
+    if (this.sound.context.state === 'suspended') {
+      this.sound.context.resume().then(() => {
+        console.log('Audio context resumed on spacebar press');
+        this.startFadeAndScene();
       });
+    } else {
+      this.startFadeAndScene();
     }
   }
+}
+
+startFadeAndScene() {
+  this.tweens.add({
+    targets: this.fadeOverlay,
+    alpha: 1,
+    duration: 1000,
+    onComplete: () => {
+      this.scene.start("loadScene");
+    }
+  });
+}
+
 }
