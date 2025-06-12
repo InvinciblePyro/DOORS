@@ -87,7 +87,7 @@ class BaseRoom extends Phaser.Scene {
       targetDoor.setInteractive();
       let flickerOn = true;
 
-      this.SFX_DoorBang.play();
+      //this.SFX_DoorBang.play();
 
       // Flicker the stroke color every 250ms
       this.flickerEvent = this.time.addEvent({
