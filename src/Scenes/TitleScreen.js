@@ -26,8 +26,9 @@ class TitleScreen extends Phaser.Scene {
     this.add.image(330, 300, "bg").setScale(0.55); // background
 
     this.add.text(10, 70, "DOORS", { fontSize: '64px', fill: '#ffffff' });
-    this.add.text(10, 160, "Look for fuel.", { fontSize: '32px', fill: '#ffffff' });
-    this.add.text(10, 190, "Click on its door when you hear it.", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 160, "Press '1' to activate lighter.", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 190, "Look for fuel.", { fontSize: '32px', fill: '#ffffff' });
+    this.add.text(10, 220, "Click on its door when you hear it.", { fontSize: '32px', fill: '#ffffff' });
     this.add.text(10, 290, "Press space to begin.", { fontSize: '32px', fill: '#ffffff' });
     this.add.text(10, 390, "EPILEPSY WARNING", { fontSize: '32px', fill: '#ffffff' });
     this.add.text(10, 420, "Made by: Samuel Rex Spivey", { fontSize: '32px', fill: '#ffffff' });
