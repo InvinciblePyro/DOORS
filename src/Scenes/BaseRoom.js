@@ -38,6 +38,16 @@ class BaseRoom extends Phaser.Scene {
     this.SFX_Lighter = this.sound.add("SFX-Lighter", { volume: 0.2 });
     this.SFX_lighterFluid_Pickup = this.sound.add("SFX-lighterFluid-Pickup", { volume: 2 });
 
+    // === Audio Context Unlock (required for autoplay on some browsers) ===
+    this.input.once("pointerdown", () => {
+      if (this.sound.context.state === "suspended") {
+        this.sound.context.resume().then(() => {
+          console.log("Audio context resumed by user interaction.");
+        });
+      }
+    });
+
+
     // === Flashlight ===
     this.flashlightEnabled = false;
     this.spotlightFadeAlpha = 1;
@@ -87,7 +97,7 @@ class BaseRoom extends Phaser.Scene {
       targetDoor.setInteractive();
       let flickerOn = true;
 
-      //this.SFX_DoorBang.play();
+      this.SFX_DoorBang.play();
 
       // Flicker the stroke color every 250ms
       this.flickerEvent = this.time.addEvent({
